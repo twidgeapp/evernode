@@ -1,1 +1,1 @@
-# cli
+# Evernode CLI 

@@ -1,0 +1,18 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.db"
+}
+
+generator client {
+  provider = "cargo prisma"
+  output   = "../src/core/src/prisma.rs"
+}
+
+model Database {
+  id                Int    @id @default(autoincrement())
+  name              String
+  connection_string String
+  database_type     String
+
+  @@map("database")
+}
