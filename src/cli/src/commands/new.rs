@@ -1,6 +1,7 @@
 use super::{Command, Commands};
 use anyhow::Result;
 use async_trait::async_trait;
+use node_core::prisma::PrismaClient;
 use requestty::Question;
 
 pub struct New {}
@@ -56,6 +57,16 @@ impl Command for New {
             vec!["Postgres", "Sqlite", "MySQL", "MongoDB"],
             "Select the database type",
         )?;
+
+        let client = commands.shared.prisma;
+        let mut api = node_api::API::new();
+        let mut api = api.connect(&database_url, &db_type).await?;
+
+        client
+            .database()
+            .create(db_name, database_url, db_type, vec![])
+            .exec()
+            .await?;
 
         Ok(String::new())
     }

@@ -1,6 +1,13 @@
 [workspace]
 resolver = "2"
-members = ["src/cli", "src/core", "prisma"]
+members = [
+    "src/cli",
+    "src/core",
+    "prisma",
+    "plugins/sqlite",
+    "plugins/api",
+    "plugins/sdk",
+]
 
 [workspace.dependencies]
 prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.2", features = [
@@ -11,3 +18,4 @@ prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-
     "default",
     "migrations",
 ] }
+anyhow = "1.0.66"
