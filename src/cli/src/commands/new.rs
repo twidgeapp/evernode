@@ -10,18 +10,28 @@ impl New {
         Self {}
     }
 
-    pub fn name_prompt(&self) -> Result<String> {
-        let default_name = names::Generator::with_naming(names::Name::Plain)
-            .next()
-            .unwrap();
+    pub fn query_input(&self, query: &str, default: Option<String>) -> Result<String> {
+        let mut prompt = None;
 
-        let db_name_propmpt = Question::input("Enter a name for your database")
-            .default(default_name)
-            .build();
+        if let Some(d) = default {
+            prompt = Some(Question::input(query).default(d).build());
+        } else {
+            prompt = Some(Question::input(query).build());
+        }
 
-        let db_name = requestty::prompt_one(db_name_propmpt)?;
+        let prompt = requestty::prompt_one(prompt.unwrap())?;
 
-        Ok(db_name.as_string().unwrap().to_string())
+        Ok(prompt.as_string().unwrap().to_string())
+    }
+
+    pub fn query_multi_select(&self, options: Vec<&str>, query: &str) -> Result<String> {
+        let prompt = Question::select(query).choices(options).build();
+        let prompt = requestty::prompt_one(prompt)?;
+        let answer = prompt.clone();
+        let item = answer.as_list_item().unwrap();
+        let output = item.text.clone();
+
+        Ok(output)
     }
 }
 
@@ -33,8 +43,19 @@ impl Command for New {
         let db_name = if let Some(sub_cmd) = commands.shared.argument.subcommand {
             sub_cmd
         } else {
-            self.name_prompt()?
+            let default_name = names::Generator::with_naming(names::Name::Plain)
+                .next()
+                .unwrap();
+
+            self.query_input("Enter a name for your database", Some(default_name))?
         };
+
+        let database_url = self.query_input("Enter the database url", None)?;
+
+        let db_type = self.query_multi_select(
+            vec!["Postgres", "Sqlite", "MySQL", "MongoDB"],
+            "Select the database type",
+        )?;
 
         Ok(String::new())
     }

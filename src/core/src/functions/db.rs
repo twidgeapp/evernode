@@ -1,8 +1,8 @@
 use anyhow::Result;
 
-use crate::prisma;
+use crate::prisma::{self, PrismaClient};
 
-pub async fn new_client() -> Result<()> {
+pub async fn new_client() -> Result<PrismaClient> {
     let evernode_dir = dirs::home_dir().unwrap().join(".evernode");
 
     std::fs::create_dir_all(evernode_dir.clone())?;
@@ -15,7 +15,8 @@ pub async fn new_client() -> Result<()> {
         std::fs::File::create(db_path.clone())?;
     }
 
-    let database = prisma::new_client_with_url(db_path.to_str().unwrap()).await?;
+    let db_url = &format!("file:{}", db_path.display());
+    let database = prisma::new_client_with_url(&format!("file:{}", db_path.display())).await?;
 
     #[cfg(debug_assertions)]
     database._db_push().await?;
@@ -23,5 +24,5 @@ pub async fn new_client() -> Result<()> {
     #[cfg(not(debug_assertions))]
     database._migrate_deploy().await?;
 
-    Ok(())
+    Ok(database)
 }

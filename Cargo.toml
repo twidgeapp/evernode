@@ -3,11 +3,11 @@ resolver = "2"
 members = ["src/cli", "src/core", "prisma"]
 
 [workspace.dependencies]
-prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.3", features = [
+prisma-client-rust = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.2", features = [
     "default",
     "migrations",
 ] }
-prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.3", features = [
+prisma-client-rust-cli = { git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.2", features = [
     "default",
     "migrations",
 ] }
