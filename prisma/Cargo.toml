@@ -4,19 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-prisma-client-rust = { workspace = true, features = [
-    "mongodb",
-    "mysql",
-    "sqlite",
-    "mssql",
-    "postgresql",
-    "migrations",
-] }
+prisma-client-rust = { workspace = true, features = ["sqlite", "migrations"] }
 prisma-client-rust-cli = { workspace = true, features = [
-    "mongodb",
-    "mysql",
     "sqlite",
-    "mssql",
-    "postgresql",
     "migrations",
 ] }

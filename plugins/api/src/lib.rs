@@ -20,9 +20,17 @@ impl API {
         };
 
         match conn_type {
-            sdk::ConnectorTypes::SQLite => self.sql_connector.connect(connection_url).await,
+            sdk::ConnectorTypes::SQLite => {
+                self.sql_connector.connect(connection_url).await?;
+                // get all tables from the database
+                let tables = self
+                    .sql_connector
+                    .exec("SELECT name FROM sqlite_master WHERE type='table'")
+                    .await?;
+                println!("{:?}", tables);
+            }
         };
 
-        todo!()
+        Ok(())
     }
 }
