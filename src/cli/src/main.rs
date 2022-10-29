@@ -27,6 +27,6 @@ async fn main() {
     std::env::set_var("RUST_LOG", "debug");
 
     pretty_env_logger::init();
-
+    widgets::setup_tui().unwrap();
     try_main().await.unwrap();
 }
